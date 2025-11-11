@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Edge: Computer Applications in Business</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.5em;
+        }
+
+        .mobile-menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Navigation Sidebar */
+        .side-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .side-nav ul {
+            list-style: none;
+        }
+
+        .side-nav li {
+            margin: 10px 0;
+        }
+
+        .side-nav a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #667eea;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .side-nav a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .side-nav a:active {
+            transform: translateX(5px) scale(0.95);
+        }
+
+        .side-nav .close-menu {
+            display: none;
+        }
+
+        /* Main Container */
+        .museum-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            transition: padding 0.3s ease;
+        }
+
+        /* Room Styles */
+        .room {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .room-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .room-title {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-subtitle {
+            font-size: 1.2em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .room-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .text-panel {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .visual-area {
+            position: relative;
+            min-height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Entrance Hall Specific */
+        .globe-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            position: relative;
+            animation: rotate 20s linear infinite;
+            box-shadow: 0 0 50px rgba(79, 172, 254, 0.5);
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .data-line {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .data-line:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+        .data-line:nth-child(2) { top: 50%; left: 60%; animation-delay: 0.5s; }
+        .data-line:nth-child(3) { top: 70%; left: 20%; animation-delay: 1s; }
+        .data-line:nth-child(4) { top: 30%; left: 70%; animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        .before-after-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+        }
+
+        .before, .after {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .before {
+            background: #ffe5e5;
+        }
+
+        .after {
+            background: #e5ffe5;
+        }
+
+        /* Room 1 - Office Productivity */
+        .icon-float {
+            position: absolute;
+            font-size: 4em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .icon-float:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .icon-float:nth-child(2) { top: 50%; left: 60%; animation-delay: 1s; }
+        .icon-float:nth-child(3) { top: 70%; left: 30%; animation-delay: 2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .interactive-station {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .interactive-station:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Room 2 - Communication */
+        .avatar-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .avatar:nth-child(2) { animation-delay: 0.3s; }
+        .avatar:nth-child(3) { animation-delay: 0.6s; }
+        .avatar:nth-child(4) { animation-delay: 0.9s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .message-bubble {
+            position: absolute;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            animation: floatMessage 4s ease-in-out infinite;
+        }
+
+        .message-bubble:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .message-bubble:nth-child(2) { top: 30%; right: 10%; animation-delay: 1s; }
+        .message-bubble:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+
+        @keyframes floatMessage {
+            0%, 100% { opacity: 0.7; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-15px); }
+        }
+
+        /* Room 3 - Database */
+        .database-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .db-table {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .db-table:nth-child(2) { animation-delay: 0.5s; }
+        .db-table:nth-child(3) { animation-delay: 1s; }
+
+        .search-simulation {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        /* Room 4 - E-Commerce */
+        .store-shelves {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .product {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .product:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .analytics-dashboard {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .chart-bar {
+            background: #667eea;
+            height: 30px;
+            margin: 10px 0;
+            border-radius: 5px;
+            animation: growBar 2s ease-out;
+        }
+
+        @keyframes growBar {
+            from { width: 0; }
+        }
+
+        /* Room 5 - Financial */
+        .transaction-list {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .transaction-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Exit Hall */
+        .holographic-screen {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            animation: hologram 3s ease-in-out infinite;
+        }
+
+        @keyframes hologram {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(118, 75, 162, 0.8); }
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Door Navigation */
+        .door-navigation {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .door {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .door:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .door-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        /* Pop-up Modal */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: popupIn 0.3s ease-out;
+        }
+
+        @keyframes popupIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #667eea;
+            background: none;
+            border: none;
+        }
+
+        /* Responsive Design - Tablet */
+        @media (max-width: 1024px) {
+            .museum-container {
+                padding: 30px 15px;
+            }
+
+            .room {
+                padding: 40px 30px;
+                margin: 30px 0;
+            }
+
+            .room-title {
+                font-size: 2.5em;
+            }
+
+            .room-content {
+                gap: 30px;
+            }
+
+            .visual-area {
+                min-height: 350px;
+            }
+
+            .globe-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        /* Responsive Design - Mobile */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .museum-container {
+                padding: 20px 10px;
+                padding-top: 80px;
+            }
+
+            .side-nav {
+                display: block;
+                position: fixed;
+                left: -100%;
+                top: 0;
+                transform: none;
+                width: 280px;
+                height: 100vh;
+                border-radius: 0;
+                padding: 60px 20px 20px;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+            }
+
+            .side-nav.active {
+                left: 0;
+            }
+
+            .side-nav .close-menu {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: #667eea;
+                color: white;
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                font-size: 1.5em;
+                cursor: pointer;
+                line-height: 1;
+            }
+
+            .side-nav ul {
+                padding: 0;
+            }
+
+            .side-nav li {
+                margin: 5px 0;
+            }
+
+            .side-nav a {
+                padding: 15px;
+                font-size: 1.1em;
+            }
+
+            .room {
+                padding: 25px 15px;
+                margin: 20px 0;
+                border-radius: 15px;
+            }
+
+            .room-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .room-header {
+                margin-bottom: 25px;
+            }
+
+            .room-title {
+                font-size: 1.8em;
+                line-height: 1.2;
+            }
+
+            .room-subtitle {
+                font-size: 1em;
+            }
+
+            .text-panel {
+                padding: 20px;
+                font-size: 1em;
+                line-height: 1.6;
+            }
+
+            .visual-area {
+                min-height: 300px;
+                padding: 20px;
+            }
+
+            .globe-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .door-navigation {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .door {
+                padding: 20px;
+                font-size: 0.9em;
+            }
+
+            .door-icon {
+                font-size: 2.5em;
+            }
+
+            .before-after-panel {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .icon-float {
+                font-size: 3em;
+            }
+
+            .avatar-container {
+                gap: 15px;
+            }
+
+            .avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+            }
+
+            .database-diagram {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .store-shelves {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .product {
+                padding: 15px;
+            }
+
+            .product-icon {
+                font-size: 2.5em;
+            }
+
+            .examples-list {
+                padding: 15px;
+            }
+
+            .examples-list ul {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .examples-list li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .popup-content {
+                padding: 30px 20px;
+                margin: 10px;
+                max-width: calc(100% - 20px);
+                max-height: 90vh;
+            }
+
+            .close-btn {
+                top: 10px;
+                right: 10px;
+                font-size: 1.8em;
+            }
+
+            .holographic-screen {
+                padding: 20px;
+            }
+
+            .timeline-item {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .interactive-station {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .search-simulation {
+                padding: 15px;
+            }
+
+            .search-bar {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .analytics-dashboard {
+                padding: 15px;
+            }
+
+            .transaction-list {
+                padding: 15px;
+            }
+
+            .transaction-item {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Responsive Design - Small Mobile */
+        @media (max-width: 480px) {
+            .museum-container {
+                padding: 15px 8px;
+                padding-top: 70px;
+            }
+
+            .room {
+                padding: 20px 12px;
+                margin: 15px 0;
+            }
+
+            .room-title {
+                font-size: 1.5em;
+            }
+
+            .room-subtitle {
+                font-size: 0.9em;
+            }
+
+            .text-panel {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .visual-area {
+                min-height: 250px;
+                padding: 15px;
+            }
+
+            .globe-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .door {
+                padding: 15px;
+                font-size: 0.85em;
+            }
+
+            .door-icon {
+                font-size: 2em;
+            }
+
+            .mobile-menu-toggle {
+                top: 15px;
+                right: 15px;
+                padding: 12px;
+                font-size: 1.3em;
+            }
+
+            .side-nav {
+                width: 100%;
+            }
+
+            .side-nav .close-menu {
+                display: block;
+            }
+
+            .popup-content {
+                padding: 25px 15px;
+                margin: 5px;
+                max-width: calc(100% - 10px);
+            }
+
+            .icon-float {
+                font-size: 2.5em;
+            }
+
+            .avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3em;
+            }
+
+            .product-icon {
+                font-size: 2em;
+            }
+        }
+
+        /* Mobile Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .door, .interactive-station, .product, .side-nav a {
+                -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+            }
+
+            .door:active, .interactive-station:active, .product:active {
+                transform: scale(0.98);
+            }
+        }
+
+        .examples-list {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+
+        .examples-list h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .examples-list ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .examples-list li {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
+    
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" onclick="toggleMobileMenu()"></div>
+    
+    <!-- Side Navigation -->
+    <nav class="side-nav">
+        <button class="close-menu" onclick="toggleMobileMenu()" aria-label="Close menu">×</button>
+        <ul>
+            <li><a href="#" onclick="showRoom('entrance'); return false;">🏠 Entrance</a></li>
+            <li><a href="#" onclick="showRoom('room1'); return false;">🖥️ Room 1</a></li>
+            <li><a href="#" onclick="showRoom('room2'); return false;">💬 Room 2</a></li>
+            <li><a href="#" onclick="showRoom('room3'); return false;">📊 Room 3</a></li>
+            <li><a href="#" onclick="showRoom('room4'); return false;">🛒 Room 4</a></li>
+            <li><a href="#" onclick="showRoom('room5'); return false;">💼 Room 5</a></li>
+            <li><a href="#" onclick="showRoom('exit'); return false;">🏁 Exit</a></li>
+        </ul>
+    </nav>
+
+    <div class="museum-container">
+        <!-- Entrance Hall -->
+        <div id="entrance" class="room active">
+            <div class="room-header">
+                <h1 class="room-title">🏠 Entrance Hall</h1>
+                <p class="room-subtitle">The Power of Technology in Business</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="globe-container">
+                        <div class="globe">
+                            <div class="data-line"></div>
+                            <div class="data-line"></div>
+                            <div class="data-line"></div>
+                            <div class="data-line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <p>"From ledgers to laptops, from paper memos to instant messaging — computer applications revolutionized how businesses operate, connect, and grow."</p>
+                    <div class="before-after-panel">
+                        <div class="before">
+                            <h3>Before</h3>
+                            <p>📝 Paper Records<br>📧 Mail<br>📞 Phone Calls</p>
+                        </div>
+                        <div class="after">
+                            <h3>After</h3>
+                            <p>💾 Digital Files<br>📧 Email<br>💬 Instant Messaging</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="door-navigation">
+                <div class="door" onclick="showRoom('room1')">
+                    <div class="door-icon">🖥️</div>
+                    <div>Office Productivity</div>
+                </div>
+                <div class="door" onclick="showRoom('room2')">
+                    <div class="door-icon">💬</div>
+                    <div>Communication</div>
+                </div>
+                <div class="door" onclick="showRoom('room3')">
+                    <div class="door-icon">📊</div>
+                    <div>Data Management</div>
+                </div>
+                <div class="door" onclick="showRoom('room4')">
+                    <div class="door-icon">🛒</div>
+                    <div>E-Commerce</div>
+                </div>
+                <div class="door" onclick="showRoom('room5')">
+                    <div class="door-icon">💼</div>
+                    <div>Financial Systems</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 1: Office Productivity -->
+        <div id="room1" class="room">
+            <div class="room-header">
+                <h1 class="room-title">🖥️ Room 1: Office Productivity Applications</h1>
+                <p class="room-subtitle">Word processing, spreadsheets, and presentation software</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="icon-float">📊</div>
+                    <div class="icon-float">📝</div>
+                    <div class="icon-float">📊</div>
+                </div>
+                <div class="text-panel">
+                    <p>"Businesses rely on productivity tools to create reports, analyze data, and present ideas. These applications boost efficiency and accuracy in daily operations."</p>
+                    <div class="examples-list">
+                        <h3>Examples:</h3>
+                        <ul>
+                            <li>Microsoft Word</li>
+                            <li>Microsoft Excel</li>
+                            <li>Microsoft PowerPoint</li>
+                            <li>Google Docs</li>
+                            <li>Google Sheets</li>
+                            <li>Google Slides</li>
+                        </ul>
+                    </div>
+                    <div class="interactive-station" onclick="showPopup('room1-popup')">
+                        <h3>🎯 Make a Mini Report</h3>
+                        <p>Click to try creating a sample business report!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 2: Communication -->
+        <div id="room2" class="room">
+            <div class="room-header">
+                <h1 class="room-title">💬 Room 2: Communication and Collaboration Tools</h1>
+                <p class="room-subtitle">Email, video conferencing, and team platforms</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="avatar-container">
+                        <div class="avatar">👤</div>
+                        <div class="avatar">👤</div>
+                        <div class="avatar">👤</div>
+                        <div class="avatar">👤</div>
+                    </div>
+                    <div class="message-bubble">Hello!</div>
+                    <div class="message-bubble">Great idea!</div>
+                    <div class="message-bubble">Let's meet</div>
+                </div>
+                <div class="text-panel">
+                    <p>"Effective communication keeps teams connected. Collaboration tools bridge distance, allowing businesses to work together globally in real time."</p>
+                    <div class="examples-list">
+                        <h3>Examples:</h3>
+                        <ul>
+                            <li>Gmail</li>
+                            <li>Zoom</li>
+                            <li>Microsoft Teams</li>
+                            <li>Slack</li>
+                            <li>Skype</li>
+                            <li>Discord</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 3: Data Management -->
+        <div id="room3" class="room">
+            <div class="room-header">
+                <h1 class="room-title">📊 Room 3: Data Management and Database Systems</h1>
+                <p class="room-subtitle">Storage, organization, and retrieval of business information</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="database-diagram">
+                        <div class="db-table">
+                            <h4>Customers</h4>
+                            <p>ID | Name | Email</p>
+                        </div>
+                        <div class="db-table">
+                            <h4>Products</h4>
+                            <p>ID | Name | Price</p>
+                        </div>
+                        <div class="db-table">
+                            <h4>Orders</h4>
+                            <p>ID | Date | Total</p>
+                        </div>
+                    </div>
+                    <div class="search-simulation">
+                        <input type="text" class="search-bar" placeholder="Search database... (Try typing 'customer' or 'product')" onkeyup="simulateSearch(this.value)">
+                        <div id="search-results" style="margin-top: 15px; color: white;"></div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <p>"Databases help businesses manage customer records, sales information, and inventory securely and efficiently."</p>
+                    <div class="examples-list">
+                        <h3>Examples:</h3>
+                        <ul>
+                            <li>Microsoft Access</li>
+                            <li>Oracle</li>
+                            <li>MySQL</li>
+                            <li>PostgreSQL</li>
+                            <li>MongoDB</li>
+                            <li>Cloud Storage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 4: E-Commerce -->
+        <div id="room4" class="room">
+            <div class="room-header">
+                <h1 class="room-title">🛒 Room 4: E-Commerce and Marketing Applications</h1>
+                <p class="room-subtitle">Online sales and digital marketing</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="store-shelves">
+                        <div class="product" onclick="showPopup('product-popup')">
+                            <div class="product-icon">📱</div>
+                            <div>Product A</div>
+                            <div>$99.99</div>
+                        </div>
+                        <div class="product" onclick="showPopup('product-popup')">
+                            <div class="product-icon">💻</div>
+                            <div>Product B</div>
+                            <div>$199.99</div>
+                        </div>
+                        <div class="product" onclick="showPopup('product-popup')">
+                            <div class="product-icon">⌚</div>
+                            <div>Product C</div>
+                            <div>$49.99</div>
+                        </div>
+                    </div>
+                    <div class="analytics-dashboard">
+                        <h3 style="color: white; margin-bottom: 15px;">Analytics Dashboard</h3>
+                        <div class="chart-bar" style="width: 80%;"></div>
+                        <div class="chart-bar" style="width: 60%;"></div>
+                        <div class="chart-bar" style="width: 90%;"></div>
+                        <div class="chart-bar" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <p>"Computer applications empower businesses to reach customers online, promote products, and analyze market trends for better decisions."</p>
+                    <div class="examples-list">
+                        <h3>Examples:</h3>
+                        <ul>
+                            <li>Shopify</li>
+                            <li>Canva</li>
+                            <li>Facebook Ads</li>
+                            <li>Google Analytics</li>
+                            <li>Amazon</li>
+                            <li>WooCommerce</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 5: Financial -->
+        <div id="room5" class="room">
+            <div class="room-header">
+                <h1 class="room-title">💼 Room 5: Financial and Accounting Systems</h1>
+                <p class="room-subtitle">Financial tracking and reporting tools</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div style="width: 100%; padding: 20px;">
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h3 style="color: #667eea; margin-bottom: 15px;">Financial Chart</h3>
+                            <div class="chart-bar" style="width: 70%; background: #4facfe;"></div>
+                            <div class="chart-bar" style="width: 85%; background: #00f2fe;"></div>
+                            <div class="chart-bar" style="width: 60%; background: #43e97b;"></div>
+                        </div>
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <span>Sale #001</span>
+                                <span style="color: green; font-weight: bold;">+$500.00</span>
+                            </div>
+                            <div class="transaction-item">
+                                <span>Sale #002</span>
+                                <span style="color: green; font-weight: bold;">+$750.00</span>
+                            </div>
+                            <div class="transaction-item">
+                                <span>Expense #001</span>
+                                <span style="color: red; font-weight: bold;">-$200.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <p>"Accounting systems record transactions, generate reports, and ensure financial transparency — key to every business's success."</p>
+                    <div class="examples-list">
+                        <h3>Examples:</h3>
+                        <ul>
+                            <li>QuickBooks</li>
+                            <li>SAP</li>
+                            <li>Xero</li>
+                            <li>FreshBooks</li>
+                            <li>Wave</li>
+                            <li>Zoho Books</li>
+                        </ul>
+                    </div>
+                    <div class="interactive-station" onclick="showPopup('accounting-popup')">
+                        <h3>🎯 Try Recording a Sale</h3>
+                        <p>Click to simulate recording a business transaction!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exit Hall -->
+        <div id="exit" class="room">
+            <div class="room-header">
+                <h1 class="room-title">🏁 Exit Hall: The Future of Business Applications</h1>
+                <p class="room-subtitle">Emerging technologies (AI, automation, and cloud computing)</p>
+            </div>
+            <div class="room-content">
+                <div class="visual-area">
+                    <div class="holographic-screen" style="width: 100%; text-align: center; color: white;">
+                        <h2 style="margin-bottom: 20px;">🤖 AI & Automation</h2>
+                        <p style="font-size: 1.2em;">The future is here!</p>
+                    </div>
+                    <div class="timeline" style="width: 100%; margin-top: 20px;">
+                        <div class="timeline-item">
+                            <strong>1990s:</strong> Desktop Computing
+                        </div>
+                        <div class="timeline-item">
+                            <strong>2000s:</strong> Internet & Web Applications
+                        </div>
+                        <div class="timeline-item">
+                            <strong>2010s:</strong> Cloud Computing & Mobile
+                        </div>
+                        <div class="timeline-item">
+                            <strong>2020s:</strong> AI & Automation
+                        </div>
+                        <div class="timeline-item">
+                            <strong>2030s:</strong> Quantum Computing?
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <p>"As technology advances, businesses continue to innovate — adapting computer applications for smarter, faster, and more sustainable operations."</p>
+                    <div style="margin-top: 30px; text-align: center;">
+                        <button onclick="showRoom('entrance')" style="padding: 15px 30px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: bold;">
+                            🔄 Return to Entrance
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Modals -->
+    <div id="room1-popup" class="popup">
+        <div class="popup-content">
+            <button class="close-btn" onclick="closePopup('room1-popup')">&times;</button>
+            <h2>📝 Create a Mini Report</h2>
+            <p>Here's a sample business report template:</p>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>Quarterly Sales Report</h3>
+                <p><strong>Date:</strong> Q4 2024</p>
+                <p><strong>Summary:</strong> Total sales increased by 15% compared to last quarter.</p>
+                <ul>
+                    <li>Product A: $50,000</li>
+                    <li>Product B: $75,000</li>
+                    <li>Product C: $30,000</li>
+                </ul>
+                <p><strong>Total:</strong> $155,000</p>
+            </div>
+            <p style="color: #666; font-style: italic;">💡 Tip: Use tools like Microsoft Word or Google Docs to create professional reports!</p>
+        </div>
+    </div>
+
+    <div id="product-popup" class="popup">
+        <div class="popup-content">
+            <button class="close-btn" onclick="closePopup('product-popup')">&times;</button>
+            <h2>🛒 Product Details</h2>
+            <div style="text-align: center; margin: 20px 0;">
+                <div style="font-size: 4em; margin-bottom: 20px;">📱</div>
+                <h3>Premium Product</h3>
+                <p style="font-size: 1.5em; color: #667eea; font-weight: bold;">$99.99</p>
+            </div>
+            <p><strong>Description:</strong> This is a sample product in our digital store. E-commerce platforms like Shopify allow businesses to showcase products, process payments, and manage inventory all in one place.</p>
+            <p style="color: #666; font-style: italic; margin-top: 20px;">💡 Tip: Modern e-commerce platforms make it easy to set up online stores and reach customers worldwide!</p>
+        </div>
+    </div>
+
+    <div id="accounting-popup" class="popup">
+        <div class="popup-content">
+            <button class="close-btn" onclick="closePopup('accounting-popup')">&times;</button>
+            <h2>💰 Record a Sale</h2>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>Transaction Form</h3>
+                <form onsubmit="recordTransaction(event)">
+                    <div style="margin: 15px 0;">
+                        <label>Transaction Type:</label>
+                        <select style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                            <option>Sale</option>
+                            <option>Expense</option>
+                            <option>Payment</option>
+                        </select>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <label>Amount:</label>
+                        <input type="number" placeholder="$0.00" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <label>Description:</label>
+                        <input type="text" placeholder="Enter description" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 15px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: bold; margin-top: 10px;">
+                        Record Transaction
+                    </button>
+                </form>
+            </div>
+            <p style="color: #666; font-style: italic;">💡 Tip: Accounting software like QuickBooks automates financial tracking and generates reports automatically!</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const sideNav = document.querySelector('.side-nav');
+            const overlay = document.querySelector('.menu-overlay');
+            const isActive = sideNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (isActive) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function showRoom(roomId) {
+            // Hide all rooms
+            document.querySelectorAll('.room').forEach(room => {
+                room.classList.remove('active');
+            });
+            
+            // Show selected room
+            document.getElementById(roomId).classList.add('active');
+            
+            // Close mobile menu if open
+            if (window.innerWidth <= 768) {
+                const sideNav = document.querySelector('.side-nav');
+                const overlay = document.querySelector('.menu-overlay');
+                sideNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showPopup(popupId) {
+            document.getElementById(popupId).classList.add('active');
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).classList.remove('active');
+        }
+
+        function simulateSearch(query) {
+            const results = document.getElementById('search-results');
+            if (query.toLowerCase().includes('customer')) {
+                results.innerHTML = '<p>✓ Found: Customer records (1,234 entries)</p>';
+            } else if (query.toLowerCase().includes('product')) {
+                results.innerHTML = '<p>✓ Found: Product catalog (567 items)</p>';
+            } else if (query.length > 0) {
+                results.innerHTML = '<p>🔍 Searching database...</p>';
+            } else {
+                results.innerHTML = '';
+            }
+        }
+
+        function recordTransaction(event) {
+            event.preventDefault();
+            alert('✅ Transaction recorded successfully!\n\n💡 In real accounting software, this would be saved to your database and update your financial reports automatically.');
+            closePopup('accounting-popup');
+        }
+
+        // Close popup when clicking outside
+        document.querySelectorAll('.popup').forEach(popup => {
+            popup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.popup').forEach(popup => {
+                    popup.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
